@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const expressValidation = require('express-validation');
 const APIError = require('../utils/APIError');
+const func = require('../utils/func');
 const { env } = require('../../config/vars');
 
 /**
@@ -9,8 +10,9 @@ const { env } = require('../../config/vars');
  */
 const handler = (err, req, res, next) => {
   const response = {
-    code: err.status,
+    status: err.status,
     message: err.message || httpStatus[err.status],
+    server_time: (new Date()).getTime(),
     errors: err.errors,
     stack: err.stack,
   };
@@ -35,6 +37,7 @@ exports.converter = (err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
     convertedError = new APIError({
       message: 'Error Validation',
+      server_time: (new Date()).getTime(),
       errors: err.errors,
       status: err.status,
       stack: err.stack,
@@ -42,8 +45,9 @@ exports.converter = (err, req, res, next) => {
   } else if (!(err instanceof APIError)) {
     convertedError = new APIError({
       message: err.message,
+      server_time: (new Date()).getTime(),
       status: err.status,
-      stack: err.stack,
+      stack: err.stack
     });
   }
 

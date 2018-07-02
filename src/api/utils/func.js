@@ -4,6 +4,7 @@ const _ = require('lodash');
 const moment = require('moment');
 // const cache = require('./cache')
 const logUtil = require('../middlewares/log')
+const APIError =  require('./APIError')
 
 var func = {
 
@@ -176,13 +177,19 @@ var func = {
             server_time: (new Date()).getTime(),
             data
         }
-        return sendData;
+        res.send(sendData);
     },
 
     renderApiErr(req, res, responseCode, responseMessage, type = 'save') {
+        let stack = {};
+        if (responseMessage instanceof APIError){
+            stack = responseMessage.stack
+        }
+
         if (typeof responseMessage == 'object') {
             responseMessage = responseMessage.message;
         }
+
         if (type == 'save') {
             responseMessage = res.__("resdata_savedata_error", { error: responseMessage })
         } else if (type == 'delete') {
@@ -198,11 +205,13 @@ var func = {
             status: responseCode,
             message: responseMessage,
             server_time: (new Date()).getTime(),
+            stack: stack,
             data: {}
         }
         // Error log
-        logUtil.error(responseMessage, req);
-        return errorData;
+        logUtil.error(responseMessage, req);    
+        res.statusCode = responseCode;
+        res.send(errorData);
     },
 
     // getSiteLocalKeys(res) {

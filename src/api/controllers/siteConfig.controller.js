@@ -1,9 +1,10 @@
-const SystemConfigModel = require("../models").SystemConfig;
+const SystemConfigModel = require('../models').SystemConfig;
+const serviceProviders = require('../services/serviceProviders'); 
 const formidable = require('formidable');
-const { validatorUtil, func } = require('../../utils');
+const { validatorUtil, func } = require('../utils');
 const shortid = require('shortid');
 const validator = require('validator')
-const settings = require('../../configs/settings');
+const settings = require('../../config/settings');
 
 function checkFormData(req, res, fields) {
     let errMsg = '';
@@ -93,12 +94,12 @@ class SystemConfig {
     async updateSystemConfig(req, res, next) {
         const form = new formidable.IncomingForm();
         form.parse(req, async (err, fields, files) => {
-            try {
-                checkFormData(req, res, fields);
-            } catch (err) {
-                console.log(err.message, err);
-                res.send(func.renderApiErr(req, res, 500, err, 'checkform'));
-            }
+            // try {
+            //     checkFormData(req, res, fields);
+            // } catch (err) {
+            //     console.log(err.message, err);
+            //     res.send(func.renderApiErr(req, res, 500, err, 'checkform'));
+            // }
 
             const systemObj = {
                 siteName: fields.siteName,
@@ -112,7 +113,7 @@ class SystemConfig {
                 databackForderPath: fields.databackForderPath,
                 mongodbInstallPath: fields.mongodbInstallPath,
                 showImgCode: fields.showImgCode,
-                siteEmailPwd: service.encrypt(fields.siteEmailPwd, settings.encrypt_key)
+                siteEmailPwd: serviceProviders.encrypt(fields.siteEmailPwd, settings.encrypt_key)
             }
             const item_id = fields._id;
             try {

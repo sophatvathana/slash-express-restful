@@ -1,4 +1,8 @@
 {
 	"validate_error_getSuccess": "validate_error_getSuccess",
-	"resdata_checkSysConfig_error": "resdata_checkSysConfig_error"
+	"resdata_checkSysConfig_error": "resdata_checkSysConfig_error",
+	"label_user_email": "label_user_email",
+	"validate_inputCorrect": "validate_inputCorrect",
+	"resdata_checkformdata_error": "resdata_checkformdata_error",
+	"resdata_getlist_error": "resdata_getlist_error"
 }

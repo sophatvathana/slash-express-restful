@@ -6,6 +6,7 @@ const httpStatus = require('http-status');
 class ExtendableError extends Error {
   constructor({
     message, errors, status, isPublic, stack,
+    server_time
   }) {
     super(message);
     this.name = this.constructor.name;
@@ -15,6 +16,7 @@ class ExtendableError extends Error {
     this.isPublic = isPublic;
     this.isOperational = true; // This is required since bluebird 4 doesn't append it anymore.
     this.stack = stack;
+    this.server_time = server_time;
     // Error.captureStackTrace(this, this.constructor.name);
   }
 }
@@ -36,9 +38,10 @@ class APIError extends ExtendableError {
     stack,
     status = httpStatus.INTERNAL_SERVER_ERROR,
     isPublic = false,
+    server_time = (new Date()).getTime()
   }) {
     super({
-      message, errors, status, isPublic, stack,
+      message, errors, status, isPublic, stack, server_time
     });
   }
 }

@@ -181,12 +181,17 @@ userSchema.statics = {
     page = 1, perPage = 30, name, email, role,
   }) {
     const options = omitBy({ name, email, role }, isNil);
-
-    return this.find(options)
-      .sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
-      .limit(perPage)
-      .exec();
+    let users = {}
+    try{
+      users = this.find(options)
+        .sort({ createdAt: -1 })
+        .skip(perPage * (page - 1))
+        .limit(perPage)
+        .exec();
+    }catch(err){
+      throw new APIError(err);
+    }
+    return users;
   },
 
   /**

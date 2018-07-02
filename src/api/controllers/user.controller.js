@@ -2,7 +2,8 @@ const httpStatus = require('http-status');
 const { omit } = require('lodash');
 const User = require('../models/user.model');
 const { handler: errorHandler } = require('../middlewares/error');
-
+const { func } = require('../utils');
+const APIError = require('../utils/APIError');
 /**
  * Load user and append to req.
  * @public
@@ -84,12 +85,25 @@ exports.update = (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
   try {
-    const users = await User.list(req.query);
-    const transformedUsers = users.map(user => user.transform());
-    res.json(transformedUsers);
-  } catch (error) {
-    next(error);
-  }
+            let current = req.query.page || 1;
+            let pageSize = req.query.pageSize || 10;
+            let type = req.query.type, queryObj = {};
+            if (type) queryObj.type = type;
+            const UserDoc = await User.list({page:current, pageSize:pageSize})
+            const totalItems = await User.count(queryObj);
+
+            let renderData = {
+                docs: UserDoc,
+                pageInfo: {
+                    totalItems,
+                    current: Number(current) || 1,
+                    pageSize: Number(pageSize) || 10
+                }
+            }
+            func.renderApiData(res, 200, 'users', renderData, 'save')
+        } catch (err) {
+            func.renderApiErr(req, res, 500, err, 'getlist')
+        }
 };
 
 /**
