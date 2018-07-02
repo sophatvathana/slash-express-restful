@@ -52,7 +52,7 @@ class SystemConfig {
     async getSystemConfigs(req, res, next) {
         try {
             let modules = req.query.modules;
-            let model = req.query.model, files = null; // 查询模式 full/simple
+            let model = req.query.model, files = null;  
             if (model === 'simple') {
                 files = {
                     siteName: 1,

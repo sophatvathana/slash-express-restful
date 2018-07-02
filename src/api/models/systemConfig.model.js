@@ -12,7 +12,7 @@ var SystemConfigSchema = new Schema({
     siteEmail: String,
     siteEmailPwd: String,
     registrationNo: { type: String, default: '' },
-    mongodbInstallPath: String,
+    mongodbInstallPath: {type: String, default: ''},
     databackForderPath: String,
     showImgCode: { type: Boolean, default: false }
 });

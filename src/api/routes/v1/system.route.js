@@ -6,6 +6,7 @@ const formidable = require('formidable'),
     util = require('util'),
     fs = require('fs');
  
+const {authorize, ADMIN} = require('../../middlewares/auth');
 const moment = require('moment');
 // let gm = require('gm');
 const url = require('url');
@@ -14,6 +15,8 @@ const service = require('../../utils/service');
  
 const settings = require("../../../config/settings");
 let checkPathNum = 0;
+const dataOptionLog  = require("../../controllers/dataOptionLog.controller");
+
 
 let uploadToDir = (req, res, dir) => {
 
@@ -115,6 +118,7 @@ router.post('/upload', function (req, res, next) {
 });
 
 
-
+router.route('/dataBackList').get(authorize(ADMIN),  dataOptionLog.getDataBakList);
+router.route('/backUpData').get(authorize(ADMIN), dataOptionLog.backUpData);
 
 module.exports = router;

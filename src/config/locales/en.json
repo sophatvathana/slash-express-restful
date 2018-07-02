@@ -1,3 +1,4 @@
 {
-	
+	"validate_error_getSuccess": "validate_error_getSuccess",
+	"resdata_checkSysConfig_error": "resdata_checkSysConfig_error"
 }

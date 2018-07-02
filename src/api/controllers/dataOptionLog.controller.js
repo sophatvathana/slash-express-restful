@@ -5,9 +5,9 @@ const formidable = require('formidable');
 const {
     service,
     validatorUtil,
-    siteFunc
-} = require('../../../utils');
-const settings = require('../../../configs/settings');
+    func
+} = require('../utils');
+const settings = require('../../config/settings');
 const shortid = require('shortid');
 const validator = require('validator')
 const archiver = require('archiver')
@@ -38,10 +38,10 @@ class DataItem {
                     pageSize: Number(pageSize) || 10
                 }
             }
-            res.send(siteFunc.renderApiData(res, 200, 'dataOptionLog', renderData, 'getlist'));
+            res.send(func.renderApiData(res, 200, 'dataOptionLog', renderData, 'getlist'));
         } catch (err) {
 
-            res.send(siteFunc.renderApiErr(req, res, 500, err, 'getlist'))
+            res.send(func.renderApiErr(req, res, 500, err, 'getlist'))
 
         }
     }
@@ -52,7 +52,7 @@ class DataItem {
         const systemConfigs = await SystemConfigModel.find({});
 
         if (_.isEmpty(systemConfigs)) {
-            res.send(siteFunc.renderApiData(res, 200, res.__("resdata_checkSysConfig_error"), {}, 'getlist'));
+            res.send(func.renderApiData(res, 200, res.__("resdata_checkSysConfig_error"), {}, 'getlist'));
         }
         let databackforder = isDev ? process.cwd() + '/databak/' : systemConfigs[0].databackForderPath;
         let mongoBinPath = systemConfigs[0].mongodbInstallPath;
@@ -91,7 +91,7 @@ class DataItem {
 
                             }
 
-                            res.send(siteFunc.renderApiData(res, 200, 'dataOptionLog', {}, 'getlist'));
+                            res.send(func.renderApiData(res, 200, 'dataOptionLog', {}, 'getlist'));
 
                         });
                     });
@@ -119,11 +119,11 @@ class DataItem {
     async delDataItem(req, res, next) {
         try {
             let errMsg = '';
-            if (!siteFunc.checkCurrentId(req.query.ids)) {
+            if (!func.checkCurrentId(req.query.ids)) {
                 errMsg = res.__("validate_error_params");
             }
             if (errMsg) {
-                throw new siteFunc.UserException(errMsg);
+                throw new func.UserException(errMsg);
             }
             let currentItem = await DataOptionLogModel.findOne({
                 _id: req.query.ids
@@ -131,17 +131,17 @@ class DataItem {
             if (currentItem && currentItem.path) {
                 await service.deleteFolder(req, res, currentItem.path);
             } else {
-                res.send(siteFunc.renderApiErr(req, res, 500, 'nodata', 'getlist'));
+                res.send(func.renderApiErr(req, res, 500, 'nodata', 'getlist'));
 
             }
             await DataOptionLogModel.remove({
                 _id: req.query.ids
             });
-            res.send(siteFunc.renderApiData(res, 200, 'dataOptionLog', {}, 'delete'));
+            res.send(func.renderApiData(res, 200, 'dataOptionLog', {}, 'delete'));
 
         } catch (err) {
 
-            res.send(siteFunc.renderApiErr(req, res, 500, err, 'delete'));
+            res.send(func.renderApiErr(req, res, 500, err, 'delete'));
         }
     }
 

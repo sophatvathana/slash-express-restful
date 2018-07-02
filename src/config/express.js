@@ -26,7 +26,7 @@ function setLocale(req, res, next) {
         defaultLocale: settings.lang,    
         indent: "\t"
     });
-     console.log(req)
+
     if (req.cookies['locale']) {
         locale = req.cookies['locale'];
     }
