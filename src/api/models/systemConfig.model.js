@@ -18,6 +18,5 @@ var SystemConfigSchema = new Schema({
 });
 
 var SystemConfig = mongoose.model("SystemConfig", SystemConfigSchema);
-
 module.exports = SystemConfig;
 

@@ -91,15 +91,23 @@ class SystemConfig {
         return await SystemConfigModel.find({}, files);
     }
 
+    async createSystemConfig(req, res, next){
+        const systemConfig = new SystemConfigModel(req.body)
+        const systemConfigSaved = await systemConfig.save()  
+    }
+
     async updateSystemConfig(req, res, next) {
-        const form = new formidable.IncomingForm();
-        form.parse(req, async (err, fields, files) => {
-            // try {
-            //     checkFormData(req, res, fields);
-            // } catch (err) {
-            //     console.log(err.message, err);
-            //     res.send(func.renderApiErr(req, res, 500, err, 'checkform'));
-            // }
+        // const form = new formidable.IncomingForm();
+        // console.log(form)
+        // form.parse(req, async (err, fields, files) => {
+        //     try {
+        //         checkFormData(req, res, fields);
+        //     } catch (err) {
+        //         console.log(err.message, err);
+        //         func.renderApiErr(req, res, 500, err, 'checkform');
+        //     }
+            const fields = req.body
+            console.log(fields)
 
             const systemObj = {
                 siteName: fields.siteName,
@@ -123,12 +131,11 @@ class SystemConfig {
                     const newAdminUser = new SystemConfigModel(systemObj);
                     await newAdminUser.save();
                 }
-                res.send(func.renderApiData(res, 200, 'systemConfig', {}, 'update'))
+                func.renderApiData(res, 200, 'systemConfig', {}, 'update');
             } catch (err) {
-
-                res.send(func.renderApiErr(req, res, 500, err, 'update'));
+                func.renderApiErr(req, res, 500, err, 'update');
             }
-        })
+        // })
 
     }
 
